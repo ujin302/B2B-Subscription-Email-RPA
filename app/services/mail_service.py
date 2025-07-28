@@ -25,7 +25,7 @@ def clean_email_text(text: str) -> str:
     return text.strip()
 
 # 메일 리스트 추출 
-def getEmailList():
+def get_email_list():
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(user, password)
 
@@ -33,39 +33,39 @@ def getEmailList():
     #받은 편지함 모든 메일 검색
     status, data = imap.uid('search', None, 'ALL')
 
-    allEmail = data[0].split()
-    allEmail.reverse()
-    allEmailInfo = []
+    all_email = data[0].split()
+    all_email.reverse()
+    all_email_info = []
     
-    for mail in allEmail:
-        allEmailInfo.append(getEmailInfo(mail, imap))
+    for mail in all_email:
+        all_email_info.append(get_email_info(mail, imap))
     
     imap.close()
     imap.logout()
-    return allEmailInfo
+    return all_email_info
 
 # 메일 정보 추출
-def getEmailInfo(mail, imap):
-    emailInfo = {} # 메일 정보 저장
+def get_email_info(mail, imap):
+    email_info = {} # 메일 정보 저장
     
     result, data = imap.uid('fetch', mail, '(RFC822)')
     rawEmail = data[0][1]
-    emailMSG = email.message_from_bytes(rawEmail)
+    email_msg= email.message_from_bytes(rawEmail)
     
     # 메일 정보
-    emailInfo['FROM'] = str(make_header(decode_header(emailMSG.get('From'))))
-    emailInfo['SENDER'] = emailMSG['Sender']
-    emailInfo['TO'] = emailMSG['To']
-    emailInfo['DATE'] = emailMSG['Date']
-    emailInfo['SUBJECT'] = str(make_header(decode_header(emailMSG.get('Subject'))))
+    email_info['UID'] = mail.decode()
+    email_info['FROM'] = str(make_header(decode_header(email_msg.get('From'))))
+    email_info['SENDER'] = email_msg['Sender']
+    email_info['TO'] = email_msg['To']
+    email_info['DATE'] = email_msg['Date']
+    email_info['SUBJECT'] = str(make_header(decode_header(email_msg.get('Subject'))))
      
-    if emailMSG.is_multipart():
-        for part in emailMSG.get_payload():
+    if email_msg.is_multipart():
+        for part in email_msg.get_payload():
             bytes = part.get_payload(decode=True)
             encode = part.get_content_charset()
-            emailInfo['CONTENT'] = str(bytes, encode)
-            emailInfo['CONTENT'] = clean_email_text(emailInfo['CONTENT'])
-
+            email_info['CONTENT'] = str(bytes, encode)
+            email_info['CONTENT'] = clean_email_text(email_info['CONTENT'])
             break
-    print(emailInfo)
-    return emailInfo
+    print(email_info)
+    return email_info
