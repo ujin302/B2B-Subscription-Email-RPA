@@ -9,4 +9,4 @@ router = APIRouter()
 @router.get("/")
 def start_subscription_email():
     result = start_service.start()
-    return {"mail": result}
+    return {"email": result}
