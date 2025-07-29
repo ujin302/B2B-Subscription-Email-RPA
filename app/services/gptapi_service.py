@@ -49,6 +49,6 @@ def ask_gpt(mail_list):
             max_tokens=500
         )
         
-        gpt_list.append(response.choices[0].message['content'])
+        gpt_list.append(response.choices[0].message.content)
         
     return  gpt_list
