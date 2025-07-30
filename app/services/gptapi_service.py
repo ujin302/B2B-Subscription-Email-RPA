@@ -1,5 +1,9 @@
 import os
 from openai import OpenAI
+import json
+from datetime import datetime
+
+from app.schemas.gpt_subscriptions import GPTSubscriptions
 
 gpt_api_key = os.getenv("GPT_API_KEY")
 system_content = """
@@ -8,7 +12,9 @@ system_content = """
     하지만, 너에게 제공하는 모든 메일이 청약 메일이 아니고 청약과 관련 없는 메일이 있을 수도 있어.
     
     내가 제공하는 데이터를 잘 판단해서 반드시 아래 JSON 스키마에 따라 대답해줘.
+    email_uid은 uid 값 저장해줘.
     {
+        "email_uid" : string 
         "is_subscription": true/false, 
         "company_name": string or null,
         "contact_name": string or null,
@@ -49,6 +55,12 @@ def ask_gpt(mail_list):
             max_tokens=500
         )
         
-        gpt_list.append(response.choices[0].message.content)
+        gpt_response = response.choices[0].message.content # GPT 답변 추출
+        print(gpt_response)
+        gpt_dict = json.loads(gpt_response) # str -> dict
+        gpt_sub = GPTSubscriptions(**gpt_dict) # dict -> GPTSubscriptions
+        gpt_sub.processed_date = datetime.now()
+        
+        gpt_list.append(gpt_sub)
         
     return  gpt_list
