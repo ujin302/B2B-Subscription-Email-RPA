@@ -37,3 +37,15 @@ def add_gpt_response(gpt_list: list[GPTSubscriptions], db: Session):
         print('예외 발생하여 rollback 실행')
         print(f'예외 메세지 {e}')
         raise
+
+
+# 가장 마지막에 받은 메일의 uid 추출
+def get_last_email_uid(db: Session):
+    try:
+        last_email = db.query(EmailsInfoTable).order_by(EmailsInfoTable.email_date).first()
+        return last_email.uid if last_email else None
+    except Exception as e:
+        db.rollback()
+        print('예외 발생하여 rollback 실행')
+        print(f'예외 메세지 {e}')
+        raise

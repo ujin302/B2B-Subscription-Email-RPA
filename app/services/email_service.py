@@ -28,18 +28,23 @@ def clean_email_text(text: str) -> str:
     return text.strip()
 
 # 메일 리스트 추출 
-def get_email_list():
+def get_email_list(last_uid):
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(user, password)
 
     imap.select("INBOX")
-    #받은 편지함 모든 메일 검색
-    status, data = imap.uid('search', None, 'ALL')
-
+    #받은 편지함에서 검색
+    # status, data = imap.uid('search', None, 'ALL') # 모든 메일
+    status, data = imap.uid('search', None, f'(UID {last_uid}:*)') # UID 범위 지정
+    
     all_email = data[0].split()
+    
+    # 최근 메일이 없는 경우 [] 반환
+    if len(all_email) is 0 and all_email[0].decode():
+        return []
+    
     # all_email.reverse()
     all_email_info = []
-    
     for mail in all_email:
         all_email_info.append(get_email_info(mail, imap))
     
