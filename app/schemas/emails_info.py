@@ -15,5 +15,5 @@ class EmailsInfo(BaseModel):
     processed_date: datetime
     
     def to_string(self) -> str:
-        to_json = self.dict(exclude={"pk", "processed_date"})
+        to_json = self.model_dump(exclude={"pk", "processed_date"})
         return json.dumps(to_json, ensure_ascii=False)

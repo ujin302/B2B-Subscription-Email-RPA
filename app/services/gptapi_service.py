@@ -13,6 +13,7 @@ system_content = """
     
     내가 제공하는 데이터를 잘 판단해서 반드시 아래 JSON 스키마에 따라 대답해줘.
     email_uid은 uid 값 저장해줘.
+    is_subscription = false 인 경우에는 email_uid 값만 작성하고 다른 요소는 모두 null 값을 가질 수 있도록 해줘
     {
         "email_uid" : string 
         "is_subscription": true/false, 
@@ -50,7 +51,7 @@ def ask_gpt(mail_list):
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": system_content},
-                {"role": "user", "content": mail_info}
+                {"role": "user", "content": mail_info.to_string()}
             ],
             max_tokens=500
         )
@@ -62,5 +63,4 @@ def ask_gpt(mail_list):
         gpt_sub.processed_date = datetime.now()
         
         gpt_list.append(gpt_sub)
-        
-    return  gpt_list
+    return gpt_list

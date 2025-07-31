@@ -19,3 +19,6 @@ class GPTSubscriptions(BaseModel):
     contract_type : Optional[str] = None # 계약 유형
     additional_request : Optional[str] = None # 추가 요청 사항
     processed_date: Optional[datetime] = None # DB에 저장된 시각
+    
+    class Config:
+        from_attributes = True # ORM 객체에서 속성 읽기 허용

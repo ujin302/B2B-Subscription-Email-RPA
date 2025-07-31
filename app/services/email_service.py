@@ -37,7 +37,7 @@ def get_email_list():
     status, data = imap.uid('search', None, 'ALL')
 
     all_email = data[0].split()
-    all_email.reverse()
+    # all_email.reverse()
     all_email_info = []
     
     for mail in all_email:
@@ -72,5 +72,5 @@ def get_email_info(mail, imap):
             email_info.content = clean_email_text(content)
             break
     
-    print(email_info.to_string())
-    return email_info.to_string()
+    print(email_info)
+    return email_info
