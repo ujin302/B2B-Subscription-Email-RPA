@@ -32,10 +32,13 @@ def get_email_list(last_uid):
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(user, password)
 
-    imap.select("INBOX")
     #받은 편지함에서 검색
-    # status, data = imap.uid('search', None, 'ALL') # 모든 메일
-    status, data = imap.uid('search', None, f'(UID {last_uid}:*)') # UID 범위 지정
+    imap.select("INBOX")
+    if last_uid is None:
+        status, data = imap.uid('search', None, 'ALL') # 모든 메일
+    else:
+        status, data = imap.uid('search', None, f'(UID {last_uid}:*)') # UID 범위 지정
+        
     
     all_email = data[0].split()
     
