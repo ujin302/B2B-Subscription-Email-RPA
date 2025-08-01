@@ -43,5 +43,6 @@ class RPAResultsTable(Base):
     pk = Column(Integer, primary_key=True, index=True, autoincrement=True)
     gpt_pk = Column(Integer, ForeignKey("gpt_subscriptions.pk"), nullable=False)
     status = Column(String(50), nullable=False)  # SUCCESS / FAIL
+    excel_name = Column(String(200), nullable=False)
     processed_date = Column(DateTime, default=datetime.utcnow)
     error_message = Column(Text)

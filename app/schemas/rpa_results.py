@@ -8,5 +8,6 @@ class RPAResults(BaseModel):
     pk : Optional[int] = None
     gpt_pk : int
     status : str
+    excel_name : str
     processed_date: datetime # 실행 시작
     error_message : Optional[str] = None
